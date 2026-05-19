@@ -1,6 +1,7 @@
 import Header from "../../components/Header";
 
 import useCartStore from "../../store/cartStore";
+import "./cartpage.css"
 
 export default function CartPage() {
 
@@ -8,31 +9,67 @@ export default function CartPage() {
         (state) => state.cart
     );
 
+    const totalPrice = cart.reduce(
+        (total, product) =>
+            total + (
+                product.price * product.quantity
+            ),
+            0
+            );
+    
+
     return (
         <div>
-            <Header />
+            <Header hideSearch />
 
             <main className="cart-page">
                 <h1>Your Cart</h1>
-                {cart.map((product, index) => (
+                
+                {cart.length === 0 ? (
+                    <p>Your cart is empty.</p>
+
+                ) : (
+
+                    cart.map((product) => (
+
                     <div
-                        key={index}
+                        key={product.id}
                         className="cart-item"
                     >
 
                         <img
                             src={product.image}
                             alt={product.name}
-                            width="120"
+                            width={120}
                         />
 
-                        <div>
-                            <h2>{product.name}</h2>
-                            <p>{product.price} kr</p>
-                        </div>
+                    <div>
+                        <h2>{product.name}</h2>
+                        <p>
+                            Price: {product.price} kr
+                        </p>
+
+                        <p>
+                            Quantity: {product.quantity}
+                        </p>
+
+                        <p>
+                            Total:
+                            {" "}
+                            {product.price * product.quantity} kr
+                        </p>
                     </div>
-                ))}
-            </main>
-        </div>
-    );
-}
+                    </div>
+                )))}
+
+                <h2>
+                    Cart Total:
+                    {" "}
+                    {totalPrice} kr
+                </h2>
+
+                </main>
+                </div>
+            );
+        }
+            

@@ -7,71 +7,85 @@ import headerlogo from "../assets/LogoHeader.png";
 import cartIcon from "../assets/Cart-Icon.png";
 
 export default function Header({
-  search,
-  setSearch
+	search,
+	setSearch,
+	hideSearch
 }) {
 
-  const cart = useCartStore(
-    (state) => state.cart
-  );
-  return (
-    <header className="header">
+	const cart = useCartStore(
+		(state) => state.cart
+	);
 
-      <div className="left-section">
+	const totalQuantity = cart.reduce(
+		(total, item) =>
+			total + item.quantity,
+		0
+	);
 
-        <a href="#" className="header-link">
-          <img
-            className="header-logo"
-            src={headerlogo}
-            alt="Logo"
-          />
-        </a>
+	return (
+		<header className="header">
 
-      </div>
+			<div className="left-section">
+				<Link
+					to="/"
+					className="header-link"
+					>
+						<img
+						className="header-logo"
+						src={headerlogo}
+						alt="Logo"
+					/>
+					</Link>
 
-      <div className="middle-section">
+			</div>
 
-        <input
-          className="search-bar"
-          type="text"
-          placeholder="Search"
+		{!hideSearch && (
+			<div className="middle-section">
 
-          value={search}
+				<input
+					className="search-bar"
+					type="text"
+					placeholder="Search"
+					value={search}
+					onChange={(e) =>
+						setSearch(e.target.value)
+					}
+				/>
 
-          onChange={(e) => 
-            setSearch(e.target.value)
-          }
-        />
+				<button className="search-button">
+					<span className="search-icon">🔎︎</span>
+				</button>
+			</div>
+		)}
 
-        <button className="search-button">
-          <span className="search-icon">🔎︎</span>
-        </button>
+			<div className="right-section">
+				<Link
+					to="/admin"
+					className="header-link"
+					>
+						Admin
+					</Link>
 
-      </div>
+				<Link
+					to="/cart"
+					className="header-link cart-link"
+				>
 
-      <div className="right-section">
+					<div className="cart-quantity">
+						{totalQuantity}
+					</div>
 
-
-        <Link
-          to="/cart" 
-        className="header-link cart-link"
-        >
-
-          <div className="cart-quantity">
-            {cart.length}
-          </div>
-
-          <img
-            src={cartIcon}
-            alt="Cart"
-            className="cart-icon"
-          />
+					<img
+						src={cartIcon}
+						alt="Cart"
+						className="cart-icon"
+					/>
 
 
-        </Link>
+				</Link>
 
-      </div>
+			</div>
 
-    </header>
-  );
+		</header>
+	);
 }

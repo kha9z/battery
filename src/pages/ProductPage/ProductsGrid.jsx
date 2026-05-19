@@ -1,12 +1,27 @@
 import products from "../../data/products";
+
 import useCartStore from "../../store/cartStore";
 
 export default function ProductsGrid({
+
   search
+
 }) {
+
+  const cart = useCartStore(
+    (state) => state.cart
+  );
 
   const addToCart = useCartStore(
     (state) => state.addToCart
+  );
+
+  const increaseQuantity = useCartStore(
+    (state) => state.increaseQuantity
+  );
+
+  const decreaseQuantity = useCartStore(
+    (state) => state.decreaseQuantity
   );
 
   const filteredProducts = products.filter(
@@ -27,32 +42,71 @@ export default function ProductsGrid({
 
     <main className="products-grid">
 
-      {filteredProducts.map((product) => (
+      {filteredProducts.map((product) => {
 
-        <div
-          key={product.id}
-          className="product-card"
-        >
+        const cartItem = cart.find(
+          (item) => item.id === product.id
+        );
 
-          <img
-            src={product.image}
-            alt={product.name}
-            className="product-image"
-          />
+        return (
 
-          <h2>{product.name}</h2>
-
-          <p>{product.price} kr</p>
-
-          <button
-            onClick={() => addToCart(product)}
+          <div
+            key={product.id}
+            className="product-card"
           >
-            Add to cart
-          </button>
 
-        </div>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="product-image"
+            />
 
-      ))}
+            <h2>{product.name}</h2>
+
+            <p>{product.price} kr</p>
+
+            {cartItem ? (
+
+              <div className="quantity-controls">
+
+                <button
+                  onClick={() =>
+                    decreaseQuantity(product.id)
+                  }
+                >
+                  -
+                </button>
+
+                <span>
+                  {cartItem.quantity}
+                </span>
+
+                <button
+                  onClick={() =>
+                    increaseQuantity(product.id)
+                  }
+                >
+                  +
+                </button>
+
+              </div>
+
+            ) : (
+
+              <button
+                onClick={() =>
+                  addToCart(product)
+                }
+              >
+                Add to cart
+              </button>
+
+            )}
+
+          </div>
+
+        );
+      })}
 
     </main>
   );
