@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from "../../firebase";
 
 import Header from "../../components/Header";
 import productSchema from "../../utils/productSchema";
@@ -37,7 +39,7 @@ export default function AdminPage() {
       )
     }
   }
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
 
     e.preventDefault();
 
@@ -57,13 +59,15 @@ export default function AdminPage() {
 
     setError("");
 
-    console.log("VALID PRODUCT");
-    console.log({
-      name,
-      price,
-      category,
-      image
-    });
+    await addDoc(
+      collection(db, "products"),
+      {
+        name,
+        price: Number(price),
+        category,
+        image
+      }
+    );
 
     setName("");
     setPrice("");
@@ -71,61 +75,61 @@ export default function AdminPage() {
     setImage("");
   }
 
-if (!isAdmin) {
+  if (!isAdmin) {
 
-  return (
+    return (
 
-    <div>
+      <div>
 
-      <Header hideSearch />
+        <Header hideSearch />
 
-      <main className="admin-page">
+        <main className="admin-page">
 
-        <h1>Admin Login</h1>
+          <h1>Admin Login</h1>
 
-        <form
-          className="admin-form"
-          onSubmit={handleLogin}
-        >
+          <form
+            className="admin-form"
+            onSubmit={handleLogin}
+          >
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-          />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+            />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-          />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+            />
 
-          <button type="submit">
-            Login
-          </button>
+            <button type="submit">
+              Login
+            </button>
 
-        </form>
+          </form>
 
-        {loginError && (
+          {loginError && (
 
-          <p className="error-message">
-            {loginError}
-          </p>
+            <p className="error-message">
+              {loginError}
+            </p>
 
-        )}
+          )}
 
-      </main>
+        </main>
 
-    </div>
+      </div>
 
-  );
-}
+    );
+  }
 
   return (
     <div>

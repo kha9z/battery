@@ -13,7 +13,7 @@ import CartPage from './pages/CartPage/CartPage'
 const router = createHashRouter([
   { path: "/", element: <ProductPage /> },
   { path: "/cart", element: <CartPage /> },
-  { path: "/admin", element: <AdminPage />}
+  { path: "/admin", element: <AdminPage /> }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
