@@ -6,7 +6,7 @@ const useAuthStore = create((set) => ({
     login: (email, password) => {
         if (
             email === "admin@admin.com" &&
-            password === "fed25"
+            password === "password"
         ) {
             set({ isAdmin: true });
             return true;

@@ -6,11 +6,14 @@ const useCartStore = create((set) => ({
 
   addToCart: (product) =>
     set((state) => {
-      const existingProduct = state.cart.find(
-        (item) => item.id === product.id
-      );
+
+      const existingProduct =
+        state.cart.find(
+          (item) => item.id === product.id
+        );
 
       if (existingProduct) {
+
         return {
           cart: state.cart.map((item) =>
             item.id === product.id
@@ -58,7 +61,8 @@ const useCartStore = create((set) => ({
             : item
         )
         .filter((item) => item.quantity > 0)
-    })),
+    }))
+
 }));
 
 export default useCartStore;

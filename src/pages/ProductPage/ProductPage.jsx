@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import Header from "../../components/Header"
-import ProductsGrid from "./ProductsGrid"
-import "./ProductPage.css"
-
+import Header from "../../components/Header";
+import ProductsGrid from "./ProductsGrid";
+import Footer from "../../components/Footer";
+import "./ProductPage.css";
 
 export default function ProductPage() {
 
@@ -19,6 +19,8 @@ export default function ProductPage() {
       <ProductsGrid
         search={search}
       />
+
+      <Footer />
     </>
   );
 }

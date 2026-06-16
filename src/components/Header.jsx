@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import useCartStore from "../store/cartStore";
 import headerlogo from "../assets/LogoHeader.png";
+import mascotLogo from "../assets/Mascot.png";
 import cartIcon from "../assets/Cart-Icon.png";
 
 export default function Header({
@@ -29,42 +30,44 @@ export default function Header({
 				<Link
 					to="/"
 					className="header-link"
-					>
-						<img
+				>
+					<img
 						className="header-logo"
 						src={headerlogo}
-						alt="Logo"
+						alt="Battery Logo"
 					/>
-					</Link>
 
+					<img
+						className="mobile-logo"
+						src={mascotLogo}
+						alt="Battery Mascot"
+					/>
+
+				</Link>
 			</div>
 
-		{!hideSearch && (
-			<div className="middle-section">
+			{!hideSearch && (
+				<div className="middle-section">
+					<div className="search-container">
 
-				<input
-					className="search-bar"
-					type="text"
-					placeholder="Search"
-					value={search}
-					onChange={(e) =>
-						setSearch(e.target.value)
-					}
-				/>
+					<input
+						className="search-bar"
+						type="text"
+						placeholder="Search"
+						value={search}
+						onChange={(e) =>
+							setSearch(e.target.value)
+						}
+					/>
 
-				<button className="search-button">
-					<span className="search-icon">🔎︎</span>
-				</button>
-			</div>
-		)}
+					<button className="search-button">
+						<span className="search-icon">🔎︎</span>
+					</button>
+				</div>
+				</div>
+			)}
 
 			<div className="right-section">
-				<Link
-					to="/admin"
-					className="header-link"
-					>
-						Admin
-					</Link>
 
 				<Link
 					to="/cart"
@@ -80,12 +83,8 @@ export default function Header({
 						alt="Cart"
 						className="cart-icon"
 					/>
-
-
 				</Link>
-
 			</div>
-
 		</header>
 	);
 }
