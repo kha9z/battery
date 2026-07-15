@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./adminpage.css"
+import "./AdminPage.css";
 
 import {
   collection,
@@ -11,27 +11,21 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
-
 import Header from "../../components/Header";
 import AdminProductList from "../../components/AdminProductList";
-
 import productSchema from "../../utils/productSchema";
 import useAuthStore from "../../store/authStore";
-
-import "./AdminPage.css";
 
 export default function AdminPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
-
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [products, setProducts] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
@@ -63,23 +57,32 @@ export default function AdminPage() {
 
     e.preventDefault();
 
-    const result = productSchema.validate({
-      name,
-      price,
-      category,
-      image
-    });
+    const result = productSchema.validate(
+      {
+        name,
+        price,
+        category,
+        image
+      },
+      {
+        abortEarly: false
+      }
+    );
 
     if (result.error) {
 
-      setError(
-        result.error.details[0].message
-      );
+      const newErrors = {};
+
+      result.error.details.forEach((detail) => {
+        newErrors[detail.path[0]] = detail.message;
+      });
+
+      setErrors(newErrors);
 
       return;
     }
 
-    setError("");
+    setErrors({});
 
     if (editingId) {
 
@@ -137,6 +140,8 @@ export default function AdminPage() {
     setPrice(product.price);
     setCategory(product.category);
     setImage(product.image);
+
+    setErrors({});
   }
 
   async function fetchProducts() {
@@ -162,11 +167,11 @@ export default function AdminPage() {
   if (!isAdmin) {
 
     return (
-
       <div>
         <Header hideSearch />
 
         <main className="admin-page">
+
           <h1>Admin Login</h1>
 
           <form
@@ -202,6 +207,7 @@ export default function AdminPage() {
             <p className="error-message">
               {loginError}
             </p>
+
           )}
         </main>
       </div>
@@ -211,10 +217,14 @@ export default function AdminPage() {
   return (
 
     <div>
+
       <Header hideSearch />
       <main className="admin-page">
-
-        <h1>Add Product</h1>
+        <h1>
+          {editingId
+            ? "Edit Product"
+            : "Add Product"}
+        </h1>
 
         <form
           className="admin-form"
@@ -230,6 +240,12 @@ export default function AdminPage() {
             }
           />
 
+          {errors.name && (
+            <p className="input-error">
+              {errors.name}
+            </p>
+          )}
+
           <input
             type="number"
             placeholder="Price"
@@ -238,6 +254,12 @@ export default function AdminPage() {
               setPrice(e.target.value)
             }
           />
+
+          {errors.price && (
+            <p className="input-error">
+              {errors.price}
+            </p>
+          )}
 
           <input
             type="text"
@@ -248,6 +270,12 @@ export default function AdminPage() {
             }
           />
 
+          {errors.category && (
+            <p className="input-error">
+              {errors.category}
+            </p>
+          )}
+
           <input
             type="text"
             placeholder="Image path"
@@ -257,6 +285,12 @@ export default function AdminPage() {
             }
           />
 
+          {errors.image && (
+            <p className="input-error">
+              {errors.image}
+            </p>
+          )}
+
           <button type="submit">
 
             {editingId
@@ -265,14 +299,6 @@ export default function AdminPage() {
 
           </button>
         </form>
-
-        {error && (
-
-          <p className="error-message">
-            {error}
-          </p>
-
-        )}
 
         <h2>Products</h2>
 
